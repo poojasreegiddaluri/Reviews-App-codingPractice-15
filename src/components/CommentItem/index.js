@@ -1,67 +1,67 @@
-// Write your code here
-import {formatDistanceToNow} from 'date-fns'
-
 import './index.css'
 
+import {formatDistanceToNow} from 'date-fns'
+
 const CommentItem = props => {
-  const {commentDetails} = props
-  const {id, name, comment, isLiked, initialClassName, date} = commentDetails
-  const initial = name ? name[0].toUpperCase() : ''
-  const likeTextClassName = isLiked ? 'button active' : 'button'
-  const likeImageUrl = isLiked
+  const {commentObject, onLikeButton, onDeleteButton} = props
+  const {
+    id,
+    name,
+    comment,
+    isLiked,
+    initialClassName,
+    commentTime,
+  } = commentObject
+  const firstLetter = name.slice(0, 1)
+  const previousTime = formatDistanceToNow(commentTime)
+  const applyLikeImage = isLiked
     ? 'https://assets.ccbp.in/frontend/react-js/comments-app/liked-img.png'
     : 'https://assets.ccbp.in/frontend/react-js/comments-app/like-img.png'
-  const postedTime = formatDistanceToNow(date)
-
-  const onClickLike = () => {
-    const {toggleIsLiked} = props
-    toggleIsLiked(id)
+  const applyLike = isLiked ? 'apply-like' : ''
+  const onLikeImage = () => {
+    onLikeButton(id)
   }
-
-  const onDeleteComment = () => {
-    const {deleteComment} = props
-    deleteComment(id)
+  const onDeleteIcon = () => {
+    onDeleteButton(id)
   }
 
   return (
     <li className="comment-item">
-      <div className="comment-container">
-        <div className={initialClassName}>
-          <p className="initial">{initial}</p>
+      <div className="user-status-card">
+        <div className={`radius ${initialClassName}`}>
+          <p className="first-letter">{firstLetter}</p>
         </div>
-        <div>
-          <div className="username-time-container">
-            <p className="username">{name}</p>
-            <p className="time">{postedTime} ago</p>
+        <div className="user-details-card">
+          <div className="user-details">
+            <p className="user-name">{name}</p>
+            <p className="comment-time">{previousTime}</p>
           </div>
-          <p className="comment">{comment}</p>
+          <p className="user-comment">{comment}</p>
         </div>
       </div>
-      <div className="buttons-container">
-        <div className="like-container">
-          <img src={likeImageUrl} alt="like" className="like-image" />
-          <button
-            className={likeTextClassName}
-            type="button"
-            onClick={onClickLike}
-          >
-            Like
-          </button>
-        </div>
+      <div className="button-card">
         <button
-          className="button"
-          type="button"
-          onClick={onDeleteComment}
-          testid="delete"
+          className={`image-button ${applyLike}`}
+          type="submit"
+          onClick={onLikeImage}
+        >
+          <img src={applyLikeImage} className="like-image" alt="like" />
+          Like
+        </button>
+        <button
+          className="delete-button"
+          type="submit"
+          data-testid="delete"
+          onClick={onDeleteIcon}
         >
           <img
-            className="delete"
             src="https://assets.ccbp.in/frontend/react-js/comments-app/delete-img.png"
+            className="delete-image"
             alt="delete"
           />
         </button>
       </div>
-      <hr className="comment-line" />
+      <hr className="li-rule" />
     </li>
   )
 }
